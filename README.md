@@ -23,11 +23,11 @@ Commands must:
 
 ### Flags
 
-Flags are options that con change the default behavior of your program, flags may take arguments if they indicate it in the specification (ex: rm **--recursive**, rm **-r**). Flags can also have abbreviations that can be stacked.
+Flags are options that can change the default behavior of your program (ex: rm **--recursive**, rm **-r**), flags may take arguments if they indicate it in the specification. Flags can also have abbreviations that can be stacked (ex: ls **-alt**).
 
 Flags must:
 
-- Start with two dashes ( **--** ) when passed to a command (ex: --recursive)
+- Start with two dashes ( **--** ) when passed to a command in full form (ex: --recursive)
 - Have a finite number of arguments if any
 
 Flags can't:
@@ -43,7 +43,8 @@ Abbreviations must:
 - Start with a single dash ( **-** ) when passed to a command (ex: rm **-r**)
 - Be represented by a single letter in the specification
 
-Is a good practice to abbreviate flags that takes arguments with capital letters and the others with lower letters.  
+> Is a good practice to abbreviate flags that takes arguments with capital letters and the others with lower letters.  
+>
 
 ### Stacks
 
@@ -52,11 +53,11 @@ Stacks are just a way to pass a lot of flags to a command in a simple way.
 Stacks must:
 
 - Start with a single dash ( **-** ) when passed to a command (ex: ls **-alt**)
-- Be immediately followed by the necessary number of arguments if the stacked flags required any
+- Be immediately followed by the necessary number of arguments if the stacked flags require any
 
 ## Writing the specification
 
-The RCLI 1.0 specification is just a json that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCLI interpreter.
+The RCLI 1.0 specification is just a json that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
 
 ### Flags
 
@@ -84,8 +85,8 @@ Example:
 
 A json command specification takes in four possible attributes:
 
-- "name": Just a string with the name of the command.
-- `"args"`: A integer with the number of arguments the command can take, if zero is passed the command can receive unlimited number of arguments. If a negative is passed ex: -1, than the interpreter will see this as you saying that the program needs at least this amount, in this case, at least one argument.
+- `"name"`: Just a string with the name of the command.
+- `"args"`: A integer with the number of arguments the command can take, if zero is passed the command don't process arguments. If a negative is passed ex: -1, than the interpreter will see this as you saying that the program needs at least this amount, in this case, at least one argument, but there's no upper limit.
 - `"flags"`(OPTIONAL): A array with flags objects as explained in the previous section. This will indicate to the interpreter which flags are valid for the command.
 - `"subcommands"`(OPTIONAL): A array with other command objects to be used as subcommands. This will indicate to the interpreter which subcommands are valid for the command.
 
