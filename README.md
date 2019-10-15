@@ -1,10 +1,8 @@
+[TOC]
+
 # RCLI - The Reclusive Command Line Interface Library
 
-
-
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
-
-# RCLI Rules
 
 ## Definitions
 
