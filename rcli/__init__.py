@@ -6,6 +6,8 @@ import json
 import rclerrors
 from rcllib import *
 
+name = "rcli"
+
 """
     The Reclusive Programmer CLI lib, part of Reclusive Box Project
     TO-DO:
