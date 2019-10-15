@@ -4,13 +4,23 @@
 
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
 
-# RCLI Rules
+1. [RCLI Rules](#rcli-rules)
+   1. [Definitions](#definitions)
+      1. [Command](#command-definition)
+      2. [Flags](#flag-definition)
+      3. [Abbreviation](#abbreviation-definition)
+      4. [Stack](#stack-definition)
+   2. [Writing the Specification](#writing-specs)
+      1. [Flags](#flag-spec)
+      2. [Commands](#command-spec)
 
-## Definitions
+# RCLI Rules <a name="rcli-rules"></a>
+
+## Definitions <a name="definitions"></a>
 
 There are some rules to define a valid RCLI specification. First of all let's establish some definitions:
 
-### Command
+### Command <a name="command-definition"></a>
 
 Commands are the main piece of a cli interface, there are possibly 2 types of commands: the main command and the subcommands. The main command is essentially the name of your program (ex: git, firefox), the sub commands are things you add to your specification to direct the user to certain parts of the program (ex: apt **install**, git **commit**).
 
@@ -21,7 +31,7 @@ Commands must:
 - Say which flags are valid if any
 - Say which subcommands are valid if any
 
-### Flags
+### Flags <a name="flag-definition"></a>
 
 Flags are options that can change the default behavior of your program (ex: rm **--recursive**, rm **-r**), flags may take arguments if they indicate it in the specification. Flags can also have abbreviations that can be stacked (ex: ls **-alt**).
 
@@ -34,7 +44,7 @@ Flags can't:
 
 - Receive other flags, as soon as other flag starts the current ends.
 
-### Abbreviations
+### Abbreviations <a name="abbreviation-definition"></a>
 
 Compact ways to pass single flags to commands.
 
@@ -46,7 +56,7 @@ Abbreviations must:
 > Is a good practice to abbreviate flags that takes arguments with capital letters and the others with lower letters.  
 >
 
-### Stacks
+### Stacks <a name="stack-definition"></a>
 
 Stacks are just a way to pass a lot of flags to a command in a simple way.
 
@@ -55,11 +65,11 @@ Stacks must:
 - Start with a single dash ( **-** ) when passed to a command (ex: ls **-alt**)
 - Be immediately followed by the necessary number of arguments if the stacked flags require any
 
-## Writing the specification
+## Writing the specification <a name="writing-specs"></a>
 
 The RCLI 1.0 specification is just a json that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
 
-### Flags
+### Flags <a name="flag-spec"></a>
 
 A json flag specification takes in three possible attributes:
 
@@ -81,7 +91,7 @@ Example:
 
 > Don't repeat abbreviations for flags, or only the first will work
 
-### Commands
+### Commands <a name="command-spec"></a>
 
 A json command specification takes in four possible attributes:
 
