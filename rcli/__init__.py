@@ -19,19 +19,17 @@ def command_to_dict(rcli_spec, arglist):
     spec = json.loads(rcli_spec)
 
     main_command = {
-        "subcommands": []
+        "subcommand": {}
     }
 
     resolve_subcommand(spec, main_command, arglist, 0)
 
-    return main_command["subcommands"][0]
+    return main_command["subcommand"]
 
 
-if __name__ == "__main__":
-    jsonstring = r'{"name":"main","args":-1,"flags":[{"name":"help","args":0,"abbreviation":"h"}],"subcommands":[{"name":"subcommand1","args":1,"flags":[{"name":"recursive","args":0}]}]}'
-    commandstring = "main -h extracommand1 extracommand1"
-
-    # try:
-    print(json.dumps(command_to_dict(jsonstring, commandstring.split(" "))))
-    # except rclerrors.GenericError as current_error:
-    #     print(current_error.message)
+# if __name__ == "__main__":
+#     with open("test.json", "r") as jsonfile:
+#         test_dict = json.loads(jsonfile.read())
+#
+#     for command in test_dict:
+#         print(command_to_dict(json.dumps(test_dict[command]), command.split(" ")))

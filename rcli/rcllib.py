@@ -179,26 +179,29 @@ def resolve_subcommand(spec, obj, arglist, index):
     subcommand = {
         "name": spec["name"],
         "flags": [],
-        "subcommands": [],
+        "subcommand": {},
         "args": []
     }
 
     current_index = index + 1
 
-    while current_index < len(arglist) and need_args(spec, subcommand):
+    while current_index < len(arglist):
         if is_valid_subcommand(arglist[current_index], spec):
             current_index = resolve_subcommand(get_subcommand(spec, arglist[current_index]), subcommand, arglist, current_index)
         elif is_valid_stack(arglist[current_index], spec):
             current_index = resolve_stack(get_stack(spec, arglist[current_index]), subcommand, arglist, current_index)
         elif is_valid_flag(arglist[current_index], spec):
             current_index = resolve_flag(get_flag(spec, arglist[current_index]), subcommand, arglist, current_index)
-        else:
+        elif need_args(spec, subcommand):
             current_index = resolve_arg(spec, subcommand, arglist, current_index)
+        else:
+            current_index += 1
 
     if not correct_arg_number(spec, subcommand):
         raise rclerrors.Error105(subcommand["name"])
 
-    obj["subcommands"].append(subcommand)
+    obj["subcommand"] = subcommand
+    # pdb.set_trace()
     return current_index
 
 
@@ -217,13 +220,10 @@ def resolve_flag(spec, obj, arglist, current_index):
     }
 
     index_to_return = current_index + 1
-    remaining_args = spec["args"]
 
-    while remaining_args > 0 and index_to_return < len(arglist):
+    while need_args(spec, flag) and index_to_return < len(arglist):
         if is_arg(arglist[index_to_return]):
-            flag["args"].append(arglist[index_to_return])
-            remaining_args -= 1
-            index_to_return += 1
+            index_to_return = resolve_arg(spec, flag, arglist, index_to_return)
         else:
             raise rclerrors.Error201(flag["name"])
 
@@ -236,15 +236,9 @@ def resolve_flag(spec, obj, arglist, current_index):
 
 def resolve_arg(spec, obj, arglist, current_index):
     index_to_return = current_index
-    args = spec["args"]
 
-    while need_args(spec, obj) and index_to_return < len(arglist):
-        obj["args"].append(arglist[index_to_return])
-        index_to_return += 1
-        args -= 1
-
-    if args > 0:
-        raise rclerrors.Error105(obj["name"])
+    obj["args"].append(arglist[index_to_return])
+    index_to_return += 1
 
     return index_to_return
 

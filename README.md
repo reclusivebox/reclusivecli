@@ -62,6 +62,7 @@ Commands must:
 - Say how many arguments they expect
 - Say which flags are valid if any
 - Say which subcommands are valid if any
+- Only take one subcommand per time if any
 
 ### Flags <a name="flag-definition"></a>
 
@@ -155,7 +156,8 @@ Example:
 The return value of the `command_to_dict` function is very similar to the specification you give to the interpreter, the only differences are:
 
 - The "args" attribute here isn't a integer but a list of strings with the arguments passed to the command or flag.
-- There's no abbreviations here the interpreter already solved them for you.
+- There's no abbreviations here, the interpreter already solved them for you.
+- There's no "subcommands" here, just "subcommand", a single command object.
 
 Example for `git push origin master`:
 
@@ -164,14 +166,12 @@ Example for `git push origin master`:
     "name": "git",
     "flags": [],
     "args": [],
-    "subcommands": [
-        {
+    "subcommand":{
             "name": "push",
             "flags": [],
             "args": ["origin", "master"],
-            "subcommands": []
-        }
-    ]
+            "subcommand": {}
+      }
 }
 ```
 
