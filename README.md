@@ -2,7 +2,9 @@
 
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
 
-1. [RCLI Rules](#rcli-rules)
+1. [Installation](#installation)
+2. Usage
+3. [RCLI Rules](#rcli-rules)
    1. [Definitions](#definitions)
       1. [Command](#command-definition)
       2. [Flags](#flag-definition)
@@ -11,6 +13,38 @@ This is just a small lib to help your programs to interpret command line argumen
    2. [Writing the Specification](#writing-specs)
       1. [Flags](#flag-spec)
       2. [Commands](#command-spec)
+
+# Installation <a name="installation"></a>
+
+RCLI was designed with python3 in mind. To install the latest version, please run:
+
+```bash
+pip install git+https://github.com/reclusivebox/rcli
+```
+
+You can also try the a specific version:
+
+```bash
+pip install git+https://github.com/reclusivebox/rcli@alpha1
+```
+
+# Usage
+
+```python
+import rcli
+import sys
+import json
+
+args = sys.argv
+with open("my_program_description.json", "r") as json_file:
+    specification = jsonfile.read()
+
+usefull_information = rcli.command_to_dict(specification, args)
+```
+
+- I don't know how you want to receive your command's arguments, in this example I used  the `sys` module.
+- The specification is a json file you write to describe your program behavior to the interpreter, the rules of this json file are described below.
+- The `command_to_dict` function returns a python dict with the usefull and formatted information for your program. To know more about the structure of this dict take a look at [here](#return-dict).
 
 # RCLI Rules <a name="rcli-rules"></a>
 
@@ -98,6 +132,8 @@ A json command specification takes in four possible attributes:
 - `"flags"`(OPTIONAL): A array with flags objects as explained in the previous section. This will indicate to the interpreter which flags are valid for the command.
 - `"subcommands"`(OPTIONAL): A array with other command objects to be used as subcommands. This will indicate to the interpreter which subcommands are valid for the command.
 
+> Remember: if you use a negative `arg` number with a subcommand it won't come back to reevaluate the main command, all the arguments after the subcommand will be passed to it, unless there's other subcommand.
+
 Example:
 
 ```json
@@ -109,6 +145,31 @@ Example:
             "name": "recursive",
             "args": 0,
             "abbreviation": "r"
+        }
+    ]
+}
+```
+
+## What RCLI gives me? <a name="return-dict"></a>
+
+The return value of the `command_to_dict` function is very similar to the specification you give to the interpreter, the only differences are:
+
+- The "args" attribute here isn't a integer but a list of strings with the arguments passed to the command or flag.
+- There's no abbreviations here the interpreter already solved them for you.
+
+Example for `git push origin master`:
+
+```json
+{
+    "name": "git",
+    "flags": [],
+    "args": [],
+    "subcommands": [
+        {
+            "name": "push",
+            "flags": [],
+            "args": ["origin", "master"],
+            "subcommands": []
         }
     ]
 }

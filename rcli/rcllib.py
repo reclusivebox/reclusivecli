@@ -177,9 +177,9 @@ def is_valid_subcommand(arg, spec):
 
 def resolve_subcommand(spec, obj, arglist, index):
     subcommand = {
-        "name": arglist[index],
+        "name": spec["name"],
         "flags": [],
-        "subcommand": {},
+        "subcommands": [],
         "args": []
     }
 
@@ -198,7 +198,7 @@ def resolve_subcommand(spec, obj, arglist, index):
     if not correct_arg_number(spec, subcommand):
         raise rclerrors.Error105(subcommand["name"])
 
-    obj["subcommand"] = subcommand
+    obj["subcommands"].append(subcommand)
     return current_index
 
 

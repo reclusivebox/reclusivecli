@@ -4,7 +4,7 @@ import re
 import sys
 import json
 import rclerrors
-from rcllib import *
+from rcllib import resolve_subcommand
 
 name = "rcli"
 
@@ -19,28 +19,12 @@ def command_to_dict(rcli_spec, arglist):
     spec = json.loads(rcli_spec)
 
     main_command = {
-        "name": spec["name"],
-        "flags": [],
-        "subcommand": {},
-        "args": []
+        "subcommands": []
     }
 
-    current_index = 0
+    resolve_subcommand(spec, main_command, arglist, 0)
 
-    while current_index < len(arglist) and need_args(spec, main_command):
-        if is_valid_subcommand(arglist[current_index], spec):
-            current_index = resolve_subcommand(get_subcommand(spec, arglist[current_index]), main_command, arglist, current_index)
-        elif is_valid_stack(arglist[current_index], spec):
-            current_index = resolve_stack(get_stack(spec, arglist[current_index]), main_command, arglist, current_index)
-        elif is_valid_flag(arglist[current_index], spec):
-            current_index = resolve_flag(get_flag(spec, arglist[current_index]), main_command, arglist, current_index)
-        else:
-            current_index = resolve_arg(spec, main_command, arglist, current_index)
-
-    if not correct_arg_number(spec, main_command):
-        raise rclerrors.Error105(main_command["name"])
-
-    return main_command
+    return main_command["subcommands"][0]
 
 
 if __name__ == "__main__":
@@ -48,6 +32,6 @@ if __name__ == "__main__":
     commandstring = "main -h extracommand1 extracommand1"
 
     # try:
-    print(json.dumps(command_to_dict(jsonstring, commandstring.split(" ")[1:])))
+    print(json.dumps(command_to_dict(jsonstring, commandstring.split(" "))))
     # except rclerrors.GenericError as current_error:
     #     print(current_error.message)
