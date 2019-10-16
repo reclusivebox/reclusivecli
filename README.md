@@ -3,7 +3,7 @@
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
 
 1. [Installation](#installation)
-2. Usage
+2. [Usage](#usage)
 3. [RCLI Rules](#rcli-rules)
    1. [Definitions](#definitions)
       1. [Command](#command-definition)
@@ -28,7 +28,7 @@ You can also try the a specific version:
 pip install git+https://github.com/reclusivebox/rcli@alpha1
 ```
 
-# Usage
+# Usage <a name="usage"></a>
 
 ```python
 import rcli
