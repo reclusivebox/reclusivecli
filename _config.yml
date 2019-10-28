@@ -28,7 +28,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  reclusivebox
 
 # Build settings
-theme: jekyll-theme-minimal
+theme: jekyll-theme-architect
 
 # Exclude from processing.
 # The following items will not be processed, by default.
