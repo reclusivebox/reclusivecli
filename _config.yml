@@ -28,7 +28,7 @@ url: " https://reclusivebox.github.io" # the base hostname & protocol for your s
 github_username:  reclusivebox
 
 # Build settings
-theme: minima
+theme: jekyll-theme-minimal
 plugins:
   - jekyll-feed
 
