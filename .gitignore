@@ -1,5 +1,5 @@
-*.egg-info/
-build/
-dist/
-test*
-*/_*/
+_site
+.sass-cache
+.jekyll-cache
+.jekyll-metadata
+vendor
