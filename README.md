@@ -1,4 +1,4 @@
-# RCLI - The Reclusive Command Line Interface Library
+# RCLI - The Reclusive Command Line Interpreter
 
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
 
