@@ -39,12 +39,12 @@ args = sys.argv
 with open("my_program_description.json", "r") as json_file:
     specification = jsonfile.read()
 
-usefull_information = rcli.command_to_dict(specification, args)
+useful_information = rcli.command_to_dict(specification, args)
 ```
 
 - I don't know how you want to receive your command's arguments, in this example I used  the `sys` module.
 - The specification is a json file you write to describe your program behavior to the interpreter, the rules of this json file are described below.
-- The `command_to_dict` function returns a python dict with the usefull and formatted information for your program. To know more about the structure of this dict take a look at [here](#return-dict).
+- The `command_to_dict` function returns a python dict with the useful and formatted information for your program. To know more about the structure of this dict take a look at [here](#return-dict).
 
 # RCLI Rules <a name="rcli-rules"></a>
 
