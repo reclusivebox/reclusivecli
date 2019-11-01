@@ -11,6 +11,11 @@ import json
 
 
 def correct_arg_number(spec, obj):
+    """
+        Takes in the specification for a object and the object itself and tells you if the object have enough arguments.
+        This function is used when the object is ready to assure that nothing is missing.
+    """
+
     if spec["args"] > 0:
         return spec["args"] == len(obj["args"])
     else:
@@ -18,6 +23,11 @@ def correct_arg_number(spec, obj):
 
 
 def need_args(spec, obj):
+    """
+        Tells you if a object can still receive arguments.
+        Used while the object isn't finished yet.
+    """
+
     if spec["args"] < 0:
         return True
     else:
@@ -25,6 +35,10 @@ def need_args(spec, obj):
 
 
 def generate_flag_map(spec):
+    """
+        Just generate a simple map to acess the possible flags of a spec more easily.
+    """
+
     to_return = {}
     try:
         for flag in spec["flags"]:
@@ -34,6 +48,10 @@ def generate_flag_map(spec):
 
 
 def generate_compact_flag_map(spec):
+    """
+        Maps all the abbreviations of a spec to appropriate flags.
+    """
+
     to_return = {}
     try:
         for flag in spec["flags"]:
@@ -46,6 +64,10 @@ def generate_compact_flag_map(spec):
 
 
 def generate_subcommand_map(spec):
+    """
+        Maps every subcommand name to a proper subcommand object.
+    """
+
     to_return = {}
     try:
         for subcommand in spec["subcommands"]:
@@ -55,6 +77,10 @@ def generate_subcommand_map(spec):
 
 
 def sanify_stack(stack):
+    """
+        Split the stack into a bunch of flags
+    """
+
     to_return = []
 
     for c in stack[1:]:
@@ -65,6 +91,10 @@ def sanify_stack(stack):
 
 
 def get_subcommand(spec, name):
+    """
+        Returns a specific command object when given the appropriate command name.
+    """
+
     try:
         return generate_subcommand_map(spec)[name]
     except KeyError:
@@ -72,6 +102,10 @@ def get_subcommand(spec, name):
 
 
 def get_flag(spec, name):
+    """
+        Given a flag name or abbreviation, returns the flag object
+    """
+
     if is_flag(name):
         try:
             return generate_flag_map(spec)[name[2:]]
@@ -88,6 +122,10 @@ def get_flag(spec, name):
 
 
 def get_stack(spec, name):
+    """
+        Returns a map with each flag pecs for each flag inside a stack.
+    """
+
     to_return = []
 
     given = sanify_stack(name)
@@ -103,6 +141,10 @@ def get_stack(spec, name):
 
 
 def is_arg(arg):
+    """
+        Tells you if something COULD be a argument for a command
+    """
+
     if not (is_flag(arg) or is_stack(arg) or is_compact_flag(arg)):
         return True
     else:
@@ -110,6 +152,10 @@ def is_arg(arg):
 
 
 def is_flag(arg):
+    """
+        Tells you if something COULD be a flag
+    """
+
     matches = re.findall(r'^--[A-Za-z]\S+$', arg)
     if len(matches) != 1:
         return False
@@ -118,6 +164,10 @@ def is_flag(arg):
 
 
 def is_compact_flag(arg):
+    """
+        Tells you if something COULD be a abbreviation
+    """
+
     matches = re.findall(r'^-[A-Za-z]$', arg)
     if len(matches) != 1:
         return False
@@ -126,6 +176,10 @@ def is_compact_flag(arg):
 
 
 def is_stack(arg):
+    """
+        Tells you if something COULD be a stack
+    """
+
     matches = re.findall(r'^-[A-Za-z][A-Za-z]+$', arg)
     if len(matches) != 1:
         return False
@@ -134,6 +188,10 @@ def is_stack(arg):
 
 
 def is_subcommand(arg):
+    """
+        Tells you if something COULD be a subcommand
+    """
+
     matches = re.findall(r'^[A-Za-z]\S+$', arg)
     if len(matches) != 1:
         return False
@@ -142,6 +200,10 @@ def is_subcommand(arg):
 
 
 def is_valid_flag(arg, spec):
+    """
+        Tells you if something is a valid flag for a given spec
+    """
+
     if is_flag(arg):
         if arg[2:] in generate_flag_map(spec).keys():
             return True
@@ -157,11 +219,16 @@ def is_valid_flag(arg, spec):
 
 
 def is_valid_stack(arg, spec):
+    """
+        Tells you if something is a valid stack for a given spec.
+    """
+
     if not is_stack(arg):
         return False
 
-    given = set(re.findall(r'^-([A-Za-z][A-Za-z]+)$', arg)[0])
+    given = sanify_stack(arg)
     possible = generate_compact_flag_map(spec).keys()
+
     for letter in given:
         if letter not in possible:
             return False
@@ -169,6 +236,10 @@ def is_valid_stack(arg, spec):
 
 
 def is_valid_subcommand(arg, spec):
+    """
+        Tells you if something is a valid subcommand for a given spec.
+    """
+
     if arg in generate_subcommand_map(spec).keys():
         return True
     else:
@@ -176,6 +247,15 @@ def is_valid_subcommand(arg, spec):
 
 
 def resolve_subcommand(spec, obj, arglist, index):
+    """
+        Given:
+            - A RCLI spec
+            - A object under construction
+            - A list of arguments
+            - A index
+        This function parses the comand in the index of the arglist. Putting it inside the object under construction. and returning the index the outside parser should focus on.
+    """
+
     subcommand = {
         "name": spec["name"],
         "flags": [],
@@ -206,6 +286,15 @@ def resolve_subcommand(spec, obj, arglist, index):
 
 
 def resolve_stack(specs, obj, arglist, current_index):
+    """
+        Given:
+            - A RCLI spec
+            - A object under construction
+            - A list of arguments
+            - A index
+        This function parses the stack in the index of the arglist. Putting it inside the object under construction. and returning the index the outside parser should focus on.
+    """
+
     index_to_return = current_index + 1
     for spec in specs:
         index_to_return = resolve_flag(spec, obj, arglist, index_to_return - 1)
@@ -214,6 +303,15 @@ def resolve_stack(specs, obj, arglist, current_index):
 
 
 def resolve_flag(spec, obj, arglist, current_index):
+    """
+        Given:
+            - A RCLI spec
+            - A object under construction
+            - A list of arguments
+            - A index
+        This function parses the flag in the index of the arglist. Putting it inside the object under construction. and returning the index the outside parser should focus on.
+    """
+
     flag = {
         "name": spec["name"],
         "args": []
@@ -235,6 +333,15 @@ def resolve_flag(spec, obj, arglist, current_index):
 
 
 def resolve_arg(spec, obj, arglist, current_index):
+    """
+        Given:
+            - A RCLI spec
+            - A object under construction
+            - A list of arguments
+            - A index
+        This function parses the argument in the index of the arglist. Putting it inside the object under construction. and returning the index the outside parser should focus on.
+    """
+
     index_to_return = current_index
 
     obj["args"].append(arglist[index_to_return])
