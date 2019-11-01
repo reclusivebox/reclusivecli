@@ -6,9 +6,9 @@ setuptools.setup(
     name="rcli",
     author="Bruno Gregório",
     author_email="bruno.gregorio.silva@outlook.com",
-    version="0.1.1b1",
+    version="0.2.0b1",
     description="A small lib to make good command line interfaces effortlessly.",
-    url="https://github.com/reclusivebox/rcli",
+    project_urls={"Source": "https://github.com/reclusivebox/rcli", "Web Page": "https://reclusivebox.github.io/rcli/"},
     packages=setuptools.find_packages(),
     classifiers=[
         "Intended Audience :: Developers",
