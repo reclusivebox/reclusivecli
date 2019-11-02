@@ -1,51 +1,50 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
 
 layout: default
 ---
 
-# RCLI - The Reclusive Command Line Interpreter
+# ReclusiveCLI - The Reclusive Command Line Interpreter
 
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
 
 # Installation <a name="installation"></a>
 
-RCLI was designed with python3 in mind. To install the latest version, please run:
+ReclusiveCLI was designed with python3 in mind. To install the latest version, please run:
 
 ```bash
-pip install git+https://github.com/reclusivebox/rcli
+pip install git+https://github.com/reclusivebox/reclusivecli
 ```
 
 You can also try the a specific version:
 
 ```bash
-pip install git+https://github.com/reclusivebox/rcli@alpha1
+pip install git+https://github.com/reclusivebox/reclusivecli@alpha1
 ```
 
 # Usage <a name="usage"></a>
 
 ```python
-import rcli
+import reclusivecli
 import sys
 import json
 
 args = sys.argv
 with open("my_program_description.json", "r") as json_file:
-    specification = jsonfile.read()
+    specification = json.loads(jsonfile.read())
 
-useful_information = rcli.command_to_dict(specification, args)
+useful_information = reclusivecli.parse_command(specification, args)
 ```
 
 - I don't know how you want to receive your command's arguments, in this example I used  the `sys` module.
-- The specification is a json file you write to describe your program behavior to the interpreter, the rules of this json file are described below.
-- The `command_to_dict` function returns a python dict with the useful and formatted information for your program. To know more about the structure of this dict take a look at [here](#return-dict).
+- The specification is a python `dict` describing the behavior of the program. Here I used json to write my specification, but you can use any language you want like YAML or XML as long as it can be loaded as a python `dict`.
+- The `parse_command` function returns a python dict with the useful and formatted information for your program. To know more about the structure of this dict take a look at [here](#return-dict).
 
-# RCLI Rules <a name="rcli-rules"></a>
+# ReclusiveCLI Rules <a name="reclusivecli-rules"></a>
 
 ## Definitions <a name="definitions"></a>
 
-There are some rules to define a valid RCLI specification. First of all let's establish some definitions:
+There are some rules to define a valid ReclusiveCLI specification. First of all let's establish some definitions:
 
 ### Command <a name="command-definition"></a>
 
@@ -94,11 +93,11 @@ Stacks must:
 
 ## Writing the specification <a name="writing-specs"></a>
 
-The RCLI 1.0 specification is just a json that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
+The ReclusiveCLI 1.0 specification is just a map that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
 
 ### Flags <a name="flag-spec"></a>
 
-A json flag specification takes in three possible attributes:
+A flag specification takes in three possible attributes:
 
 - `"name"`: Just a string with the full name of the flag.
 - `"args"`: A positive integer with how many arguments the flag can take (zero can also be passed here).
@@ -107,11 +106,18 @@ A json flag specification takes in three possible attributes:
 Example:
 
 ```json
-{
+{	// json example
     "name": "recursive",
     "args": 0,
     "abbreviation": "r"
 }
+```
+
+```yaml
+# yaml example
+name: "recursive"
+args: 0
+abbreviation: 'r'
 ```
 
 > You don't need to write the dashes (`-`) and the double dashes (`--`) for flags in the specification, only when using the command.
@@ -120,7 +126,7 @@ Example:
 
 ### Commands <a name="command-spec"></a>
 
-A json command specification takes in four possible attributes:
+A command specification takes in four possible attributes:
 
 - `"name"`: Just a string with the name of the command.
 - `"args"`: A integer with the number of arguments the command can take, if zero is passed the command don't process arguments. If a negative is passed ex: -1, than the interpreter will see this as you saying that the program needs at least this amount, in this case, at least one argument, but there's no upper limit.
@@ -129,10 +135,10 @@ A json command specification takes in four possible attributes:
 
 > Remember: if you use a negative `arg` number with a subcommand it won't come back to reevaluate the main command, all the arguments after the subcommand will be passed to it, unless there's other subcommand.
 
-Example:
+Examples:
 
 ```json
-{
+{	// json example
     "name": "cp",
     "args": -2,
     "flags": [
@@ -145,18 +151,29 @@ Example:
 }
 ```
 
-## What RCLI gives me? <a name="return-dict"></a>
+```yaml
+# yaml example
+name: "cp"
+args: -2
+flags:
+  -
+    name: "recursive"
+    args: 0
+    abbreviation: 'r'
+```
 
-The return value of the `command_to_dict` function is very similar to the specification you give to the interpreter, the only differences are:
+## What ReclusiveCLI gives me? <a name="return-dict"></a>
+
+The return value of the `parse_command` function is very similar to the specification you give to the interpreter, the only differences are:
 
 - The "args" attribute here isn't a integer but a list of strings with the arguments passed to the command or flag.
 - There's no abbreviations here, the interpreter already solved them for you.
 - There's no "subcommands" here, just "subcommand", a single command object.
 
-Example for `git push origin master`:
+Examples for `git push origin master`:
 
 ```json
-{
+{	// json example
     "name": "git",
     "flags": [],
     "args": [],
@@ -169,3 +186,18 @@ Example for `git push origin master`:
 }
 ```
 
+```yaml
+# yaml example
+name: "git"
+flags: []
+args: []
+subcommand:
+  name: "push"
+  flags: []
+  args:
+    - "origin"
+    - "master"
+  subcommand: {}
+```
+
+Remember the `parse_command` function only gives you a python `dict`, the examples above were only to show what's gonna be inside this `dict`.
