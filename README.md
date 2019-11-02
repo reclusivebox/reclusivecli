@@ -100,11 +100,11 @@ Stacks must:
 
 ## Writing the specification <a name="writing-specs"></a>
 
-The RCLI 1.0 specification is just a json that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
+The RCLI 1.0 specification is just a map that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
 
 ### Flags <a name="flag-spec"></a>
 
-A json flag specification takes in three possible attributes:
+A flag specification takes in three possible attributes:
 
 - `"name"`: Just a string with the full name of the flag.
 - `"args"`: A positive integer with how many arguments the flag can take (zero can also be passed here).
@@ -133,7 +133,7 @@ abbreviation: 'r'
 
 ### Commands <a name="command-spec"></a>
 
-A json command specification takes in four possible attributes:
+A command specification takes in four possible attributes:
 
 - `"name"`: Just a string with the name of the command.
 - `"args"`: A integer with the number of arguments the command can take, if zero is passed the command don't process arguments. If a negative is passed ex: -1, than the interpreter will see this as you saying that the program needs at least this amount, in this case, at least one argument, but there's no upper limit.
