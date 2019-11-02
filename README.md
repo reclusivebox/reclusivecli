@@ -1,10 +1,10 @@
-# RCLI - The Reclusive Command Line Interpreter
+# ReclusiveCLI - The Reclusive Command Line Interpreter
 
 This is just a small lib to help your programs to interpret command line arguments effortlessly.
 
 1. [Installation](#installation)
 2. [Usage](#usage)
-3. [RCLI Rules](#rcli-rules)
+3. [ReclusiveCLI Rules](#reclusivecli-rules)
    1. [Definitions](#definitions)
       1. [Command](#command-definition)
       2. [Flags](#flag-definition)
@@ -16,22 +16,22 @@ This is just a small lib to help your programs to interpret command line argumen
 
 # Installation <a name="installation"></a>
 
-RCLI was designed with python3 in mind. To install the latest version, please run:
+ReclusiveCLI was designed with python3 in mind. To install the latest version, please run:
 
 ```bash
-pip install git+https://github.com/reclusivebox/rcli
+pip install git+https://github.com/reclusivebox/reclusivecli
 ```
 
 You can also try the a specific version:
 
 ```bash
-pip install git+https://github.com/reclusivebox/rcli@alpha1
+pip install git+https://github.com/reclusivebox/reclusivecli@alpha1
 ```
 
 # Usage <a name="usage"></a>
 
 ```python
-import rcli
+import reclusivecli
 import sys
 import json
 
@@ -39,18 +39,18 @@ args = sys.argv
 with open("my_program_description.json", "r") as json_file:
     specification = json.loads(jsonfile.read())
 
-useful_information = rcli.parse_command(specification, args)
+useful_information = reclusivecli.parse_command(specification, args)
 ```
 
 - I don't know how you want to receive your command's arguments, in this example I used  the `sys` module.
 - The specification is a python `dict` describing the behavior of the program. Here I used json to write my specification, but you can use any language you want like YAML or XML as long as it can be loaded as a python `dict`.
 - The `parse_command` function returns a python dict with the useful and formatted information for your program. To know more about the structure of this dict take a look at [here](#return-dict).
 
-# RCLI Rules <a name="rcli-rules"></a>
+# ReclusiveCLI Rules <a name="reclusivecli-rules"></a>
 
 ## Definitions <a name="definitions"></a>
 
-There are some rules to define a valid RCLI specification. First of all let's establish some definitions:
+There are some rules to define a valid ReclusiveCLI specification. First of all let's establish some definitions:
 
 ### Command <a name="command-definition"></a>
 
@@ -100,7 +100,7 @@ Stacks must:
 
 ## Writing the specification <a name="writing-specs"></a>
 
-The RCLI 1.0 specification is just a map that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
+The ReclusiveCLI 1.0 specification is just a map that describes the cli of your program. To write a good specification you just need to know how to write flags and commands, things like stacks are handled by the RCL Interpreter.
 
 ### Flags <a name="flag-spec"></a>
 
@@ -169,7 +169,7 @@ flags:
     abbreviation: 'r'
 ```
 
-## What RCLI gives me? <a name="return-dict"></a>
+## What ReclusiveCLI gives me? <a name="return-dict"></a>
 
 The return value of the `parse_command` function is very similar to the specification you give to the interpreter, the only differences are:
 
