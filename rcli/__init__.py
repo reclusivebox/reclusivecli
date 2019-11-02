@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from rcllib import resolve_subcommand
+from rcli.rcllib import resolve_subcommand
 
 name = "rcli"
 
