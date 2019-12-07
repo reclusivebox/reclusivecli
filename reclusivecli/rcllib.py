@@ -78,7 +78,7 @@ def generate_subcommand_map(spec):
 
 def sanify_stack(stack):
     """
-        Split the stack into a bunch of flags
+        Split the stack into a list of characters representing the flags
     """
 
     to_return = []
@@ -258,7 +258,7 @@ def resolve_subcommand(spec, obj, arglist, index):
 
     subcommand = {
         "name": spec["name"],
-        "flags": [],
+        "flags": {},
         "subcommand": {},
         "args": []
     }
@@ -312,8 +312,8 @@ def resolve_flag(spec, obj, arglist, current_index):
         This function parses the flag in the index of the arglist. Putting it inside the object under construction. and returning the index the outside parser should focus on.
     """
 
+    flagname = spec["name"]
     flag = {
-        "name": spec["name"],
         "args": []
     }
 
@@ -323,12 +323,12 @@ def resolve_flag(spec, obj, arglist, current_index):
         if is_arg(arglist[index_to_return]):
             index_to_return = resolve_arg(spec, flag, arglist, index_to_return)
         else:
-            raise reclusivecli.rclerrors.Error201(flag["name"])
+            raise reclusivecli.rclerrors.Error201(flagname)
 
     if not correct_arg_number(spec, flag):
-        raise reclusivecli.rclerrors.Error201(flag["name"])
+        raise reclusivecli.rclerrors.Error201(flagname)
 
-    obj["flags"].append(flag)
+    obj["flags"][flagname] = flag
     return index_to_return
 
 
