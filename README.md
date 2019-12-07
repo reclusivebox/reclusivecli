@@ -19,7 +19,7 @@ This is just a small lib to help your programs to interpret command line argumen
 ReclusiveCLI was designed with python3 in mind. To install the latest version, please run:
 
 ```bash
-pip install git+https://github.com/reclusivebox/reclusivecli
+pip install reclusivecli
 ```
 
 You can also try the a specific version:
@@ -137,8 +137,8 @@ A command specification takes in four possible attributes:
 
 - `"name"`: Just a string with the name of the command.
 - `"args"`: A integer with the number of arguments the command can take, if zero is passed the command don't process arguments. If a negative is passed ex: -1, than the interpreter will see this as you saying that the program needs at least this amount, in this case, at least one argument, but there's no upper limit.
-- `"flags"`(OPTIONAL): A array with flags objects as explained in the previous section. This will indicate to the interpreter which flags are valid for the command.
-- `"subcommands"`(OPTIONAL): A array with other command objects to be used as subcommands. This will indicate to the interpreter which subcommands are valid for the command.
+- `"flags"`(OPTIONAL): An array with flags objects as explained in the previous section. This will indicate to the interpreter which flags are valid for the command.
+- `"subcommands"`(OPTIONAL): An array with other command objects to be used as subcommands. This will indicate to the interpreter which subcommands are valid for the command.
 
 > Remember: if you use a negative `arg` number with a subcommand it won't come back to reevaluate the main command, all the arguments after the subcommand will be passed to it, unless there's other subcommand.
 
@@ -176,6 +176,7 @@ The return value of the `parse_command` function is very similar to the specific
 - The "args" attribute here isn't a integer but a list of strings with the arguments passed to the command or flag.
 - There's no abbreviations here, the interpreter already solved them for you.
 - There's no "subcommands" here, just "subcommand", a single command object.
+- The flags here is a `dict` not a list, and each flag just contains a list with the args.
 
 Examples for `git push origin master`:
 
@@ -186,7 +187,7 @@ Examples for `git push origin master`:
     "args": [],
     "subcommand":{
             "name": "push",
-            "flags": [],
+            "flags": {},
             "args": ["origin", "master"],
             "subcommand": {}
       }
@@ -199,11 +200,10 @@ name: "git"
 flags: []
 args: []
 subcommand:
-  name: "push"
-  flags: []
-  args:
-    - "origin"
-    - "master"
+  name: "commit"
+  flags:
+  	message: ["Your Message"]
+  args: []
   subcommand: {}
 ```
 
