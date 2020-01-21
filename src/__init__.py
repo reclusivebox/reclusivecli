@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from reclusivecli.rcllib import resolve_subcommand
+from rcllib import resolve_subcommand
 
 name = "reclusivecli"
 

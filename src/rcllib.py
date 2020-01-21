@@ -5,7 +5,7 @@ Just some simple functions needed by reclusivecli.
 """
 
 
-import reclusivecli.rclerrors
+import rclerrors
 import re
 import json
 
@@ -98,7 +98,7 @@ def get_subcommand(spec, name):
     try:
         return generate_subcommand_map(spec)[name]
     except KeyError:
-        raise reclusivecli.rclerrors.Error103([name, spec["name"]])
+        raise rclerrors.Error103([name, spec["name"]])
 
 
 def get_flag(spec, name):
@@ -110,15 +110,15 @@ def get_flag(spec, name):
         try:
             return generate_flag_map(spec)[name[2:]]
         except KeyError:
-            raise reclusivecli.rclerrors.Error102([name, spec["name"]])
+            raise rclerrors.Error102([name, spec["name"]])
 
     elif is_compact_flag(name):
         try:
             return generate_compact_flag_map(spec)[name[1:]]
         except KeyError:
-            raise reclusivecli.rclerrors.Error102([name, spec["name"]])
+            raise rclerrors.Error102([name, spec["name"]])
 
-    raise reclusivecli.rclerrors.Error102([name, spec["name"]])
+    raise rclerrors.Error102([name, spec["name"]])
 
 
 def get_stack(spec, name):
@@ -135,7 +135,7 @@ def get_stack(spec, name):
         try:
             to_return.append(flags[letter])
         except KeyError:
-            raise reclusivecli.rclerrors.Error302([letter, name])
+            raise rclerrors.Error302([letter, name])
 
     return to_return
 
@@ -278,7 +278,7 @@ def resolve_subcommand(spec, obj, arglist, index):
             current_index += 1
 
     if not correct_arg_number(spec, subcommand):
-        raise reclusivecli.rclerrors.Error105(subcommand["name"])
+        raise rclerrors.Error105(subcommand["name"])
 
     obj["subcommand"] = subcommand
     # pdb.set_trace()
@@ -323,10 +323,10 @@ def resolve_flag(spec, obj, arglist, current_index):
         if is_arg(arglist[index_to_return]):
             index_to_return = resolve_arg(spec, flag, arglist, index_to_return)
         else:
-            raise reclusivecli.rclerrors.Error201(flagname)
+            raise rclerrors.Error201(flagname)
 
     if not correct_arg_number(spec, flag):
-        raise reclusivecli.rclerrors.Error201(flagname)
+        raise rclerrors.Error201(flagname)
 
     obj["flags"][flagname] = flag
     return index_to_return
