@@ -6,12 +6,11 @@ setuptools.setup(
     name="reclusivecli",
     author="Bruno Gregório",
     author_email="reclusivebox@outlook.com",
-    version="0.5.0a2",
+    version="0.5.0a3",
     description="A small lib to make good command line interfaces effortlessly.",
     project_urls={"Source": "https://github.com/reclusivebox/reclusivecli", "Web Page": "https://reclusivebox.github.io/reclusivecli/"},
-    package_dir={
-        "":"src"
-    },
+    packages=setuptools.find_packages(),
+    package_dir={'':'src'},
     classifiers=[
         "Intended Audience :: Developers",
         "License :: OSI Approved :: Apache Software License",
